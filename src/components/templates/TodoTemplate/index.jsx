@@ -29,13 +29,6 @@ export const TodoTemplate = () => {
 
   return (
     <BaseLayout title="Todo List">
-      <section className={styles.common}>
-        <AddTodo
-          addInputValue={addInputValue}
-          onChangeTodo={onChangeAddInputValue}
-          handleAddTodo={handleAddTodo}
-        />
-      </section>
       {/* Todo検索フォームエリア */}
       <section className={styles.common}>
         <InputForm
