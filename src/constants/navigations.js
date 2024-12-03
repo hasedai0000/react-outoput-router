@@ -8,7 +8,7 @@
  * ベースPATH
  * @type {string}
  */
-export const BASE_PATH = "/react-output-router/";
+export const BASE_PATH = "/react-output-router";
 
 /**
  * リンク先一覧
