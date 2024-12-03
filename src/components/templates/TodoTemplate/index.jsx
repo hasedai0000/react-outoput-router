@@ -8,6 +8,7 @@ import { AddTodo } from "../../organisms/AddTodo";
 import { TodoList } from "../../organisms/TodoLlist";
 import { useTodo } from "../../../hooks/useTodo.js";
 import styles from "./styles.module.css";
+import { BaseLayout } from "../../organisms/BaseLayout/index.jsx";
 
 /**
  * TodoTemplate
@@ -27,9 +28,7 @@ export const TodoTemplate = () => {
   ] = useTodo();
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Todo List</h1>
-      {/* Todo追加エリア */}
+    <BaseLayout title="Todo List">
       <section className={styles.common}>
         <AddTodo
           addInputValue={addInputValue}
@@ -54,6 +53,6 @@ export const TodoTemplate = () => {
           />
         )}
       </section>
-    </div>
+    </BaseLayout>
   );
 };
