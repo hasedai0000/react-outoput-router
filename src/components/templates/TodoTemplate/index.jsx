@@ -4,11 +4,11 @@
  * @package components
  */
 import { InputForm } from "../../atoms/InputForm";
-import { AddTodo } from "../../organisms/AddTodo";
 import { TodoList } from "../../organisms/TodoLlist";
-import { useTodo } from "../../../hooks/useTodo.js";
 import styles from "./styles.module.css";
 import { BaseLayout } from "../../organisms/BaseLayout/index.jsx";
+import { useTodoContext } from "../../../contexts/TodoContext.jsx";
+import { useTodoTemplate } from "./useTodoTemplate.js";
 
 /**
  * TodoTemplate
@@ -17,35 +17,29 @@ import { BaseLayout } from "../../organisms/BaseLayout/index.jsx";
  */
 export const TodoTemplate = () => {
   // コンテキストから状態とロジックを呼び出してコンポーネントにあてがう
-  const [
-    { addInputValue, searchKeyword, showTodoList },
-    {
-      onChangeAddInputValue,
-      handleAddTodo,
-      handleDeleteTodo,
-      handleChangeSearchKeyword,
-    },
-  ] = useTodo();
+  const { todoList, deleteTodo } = useTodoContext();
+
+  const [{ searchKeyword, showTodoList }, { handleChangeSearchKeyword }] =
+    useTodoTemplate({ todoList });
 
   return (
     <BaseLayout title="Todo List">
-      {/* Todo検索フォームエリア */}
-      <section className={styles.common}>
-        <InputForm
-          inputValue={searchKeyword}
-          placeholder={"Search Keyword"}
-          handleChangeValue={handleChangeSearchKeyword}
-        />
-      </section>
-      {/* Todoリスト一覧表示 */}
-      <section className={styles.common}>
-        {showTodoList.length > 0 && (
-          <TodoList
-            todoList={showTodoList}
-            handleDeleteTodo={handleDeleteTodo}
+      <div className={styles.container}>
+        {/* Todo検索フォームエリア */}
+        <div className={styles.area}>
+          <InputForm
+            inputValue={searchKeyword}
+            placeholder={"Search Keyword"}
+            handleChangeValue={handleChangeSearchKeyword}
           />
-        )}
-      </section>
+        </div>
+        {/* Todoリスト一覧表示 */}
+        <div className={styles.area}>
+          {showTodoList.length > 0 && (
+            <TodoList todoList={showTodoList} handleDeleteTodo={deleteTodo} />
+          )}
+        </div>
+      </div>
     </BaseLayout>
   );
 };
