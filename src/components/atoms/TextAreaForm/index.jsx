@@ -16,7 +16,7 @@ export const TextAreaForm = ({
   disabled = false,
   value,
   placeholder,
-  onChange,
+  handleChangeValue,
 }) => {
   return (
     <textarea
@@ -24,7 +24,7 @@ export const TextAreaForm = ({
       className={styles.text}
       value={value}
       placeholder={placeholder}
-      onChange={onChange}
+      onChange={handleChangeValue}
     />
   );
 };
