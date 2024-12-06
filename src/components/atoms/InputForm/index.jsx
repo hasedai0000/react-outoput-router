@@ -12,7 +12,7 @@ import styles from "./style.module.css";
  */
 export const InputForm = (props) => {
   /* props */
-  const { inputValue, placeholder, handleChangeValue, handleKeyDown } = props;
+  const { inputValue, placeholder, handleChangeValue } = props;
 
   return (
     <input
@@ -21,7 +21,6 @@ export const InputForm = (props) => {
       placeholder={placeholder}
       value={inputValue}
       onChange={handleChangeValue}
-      onKeyDown={handleKeyDown}
     />
   );
 };
