@@ -3,85 +3,95 @@
  *
  * @package hooks
  */
-import { useState, useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { addTodo, deleteTodo } from "../store/todo";
+import { useState, useCallback } from "react";
+import { INIT_TODO_LIST, INIT_UNIQUE_ID } from "../constants/data.js";
 
 /**
  * useTodo
  */
 export const useTodo = () => {
-  /* store */
-  // @ts-ignore
-  const todoList = useSelector((state) => state.todo.todos);
-  const dispatch = useDispatch();
-
-  /* local state */
-  /* add input title */
-  const [addInputValue, setAddInputValue] = useState("");
-  /* 検索キーワード */
-  const [searchKeyword, setSearchKeyword] = useState("");
-  /* 表示用TodoList */
-  const showTodoList = useMemo(() => {
-    return todoList.filter((todo) => {
-      // 検索キーワードに部分一致したTodoだけを一覧表示する
-      const regexp = new RegExp("^" + searchKeyword, "i");
-      return todo.title.match(regexp);
-    });
-    // useMemoの第二引数([originTodoList, searchKeyword])に依存して処理が実行される
-    // originTodoListとsearchKeywordの値が変更される度にfilterの検索処理が実行
-    // ただし結果が前回と同じならキャッシュを返却し処理は実行されない(無駄な処理を省いている)
-    // 詳しくはuseMemoを調べてください。
-  }, [todoList, searchKeyword]);
+  /* todolist */
+  const [todoList, setTodoList] = useState(INIT_TODO_LIST);
+  /* todo採番ID */
+  const [uniqueId, setUniqueId] = useState(INIT_UNIQUE_ID);
 
   /* actions */
   /**
-   * addInputValueの変更処理
-   * @param {*} e
-   */
-  const onChangeAddInputValue = (e) => setAddInputValue(e.target.value);
-
-  /**
    * Todo新規登録処理
-   * @param {*} e
+   * @param {*} title
+   * @param {*} content
    */
-  const handleAddTodo = (e) => {
-    //  エンターキーが押された時にTodoを追加する
-    if (e.key === "Enter" && addInputValue !== "") {
-      // Todo追加処理
-      dispatch(addTodo(addInputValue));
-      // todo追加後、入力値をリセット
-      setAddInputValue("");
-    }
-  };
+  const addTodo = useCallback(
+    (title, content) => {
+      const nextUniqueId = uniqueId + 1;
+      const newTodo = [
+        ...todoList,
+        {
+          id: nextUniqueId,
+          title: title,
+          content: content,
+        },
+      ];
+      // todolistを更新
+      setTodoList(newTodo);
+      // 採番IDを更新
+      setUniqueId(nextUniqueId);
+    },
+    [todoList, uniqueId]
+  );
 
   /**
    * Todo削除処理
    * @param { number } targetId
    * @param { string }targetTitle
    */
-  const handleDeleteTodo = (targetId, targetTitle) => {
-    if (window.confirm(`「${targetTitle}」のtodoを削除しますか？`))
-      dispatch(deleteTodo(targetId));
-  };
+  const deleteTodo = useCallback(
+    (targetId, targetTitle) => {
+      if (window.confirm(`「${targetTitle}」のtodoを削除しますか？`)) {
+        // 削除するid以外のtodoリストを再編集
+        // filterを用いた方法
+        const newTodoList = todoList.filter((todo) => todo.id !== targetId);
+
+        // 削除するTodoの配列番号を取り出してspliceで削除する方法もある
+        // const newTodoList = [...todoList];
+        // const deleteIndex = newTodoList.findIndex((todo) => todo.id === targetId);
+        // newTodoList.splice(deleteIndex, 1);
+
+        // todoを削除したtodo listで更新
+        setTodoList(newTodoList);
+      }
+    },
+    [todoList]
+  );
 
   /**
-   * 検索キーワード更新処理
-   * @param {*} e
+   * Todo編集更新処理
+   * @param {*} targetId
+   * @param {*} title
+   * @param {*} content
    */
-  const handleChangeSearchKeyword = (e) => setSearchKeyword(e.target.value);
+  const updateTodo = useCallback(
+    (id, title, content) => {
+      const updatedTodoList = todoList.map((todo) => {
+        if (id === todo.id) {
+          return {
+            id: todo.id,
+            title: title,
+            content: content,
+          };
+        }
+        return todo;
+      });
+      // todolistを更新
+      setTodoList(updatedTodoList);
+    },
+    [todoList]
+  );
 
-  const states = {
-    addInputValue,
-    searchKeyword,
-    showTodoList,
+  return {
+    todoList,
+    addTodo,
+    deleteTodo,
+    updateTodo,
   };
-  const actions = {
-    onChangeAddInputValue,
-    handleAddTodo,
-    handleDeleteTodo,
-    handleChangeSearchKeyword,
-  };
-
-  return [states, actions];
 };
