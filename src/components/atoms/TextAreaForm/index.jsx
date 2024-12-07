@@ -14,7 +14,7 @@ import styles from "./styles.module.css";
  */
 export const TextAreaForm = ({
   disabled = false,
-  value,
+  inputValue,
   placeholder,
   handleChangeValue,
 }) => {
@@ -22,7 +22,7 @@ export const TextAreaForm = ({
     <textarea
       disabled={disabled}
       className={styles.text}
-      value={value}
+      value={inputValue}
       placeholder={placeholder}
       onChange={handleChangeValue}
     />
