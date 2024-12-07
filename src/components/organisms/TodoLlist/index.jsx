@@ -35,6 +35,18 @@ export const TodoList = ({ todoList, handleDeleteTodo }) => {
     [navigate]
   );
 
+  /**
+   * 編集ページへ遷移する処理
+   * @param {*} id
+   * @type {function(*): void}
+   */
+  const handleMoveEditPage = useCallback(
+    (id) => {
+      navigate(`${NAVIGATION_PATH.EDIT}${id}`);
+    },
+    [navigate]
+  );
+
   return (
     <ul className={styles.list}>
       {todoList.map((todo) => (
@@ -54,7 +66,7 @@ export const TodoList = ({ todoList, handleDeleteTodo }) => {
               <FontAwesomeIcon
                 icon={faPenToSquare}
                 size="lg"
-                onClick={() => handleDeleteTodo(todo.id, todo.title)}
+                onClick={() => handleMoveEditPage(todo.id)}
               />
             </div>
             <div className={styles.far}>
