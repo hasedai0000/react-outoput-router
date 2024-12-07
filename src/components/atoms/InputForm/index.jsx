@@ -10,12 +10,15 @@ import styles from "./style.module.css";
  * @param {*} props
  * @returns
  */
-export const InputForm = (props) => {
-  /* props */
-  const { inputValue, placeholder, handleChangeValue } = props;
-
+export const InputForm = ({
+  disabled = false,
+  inputValue,
+  placeholder,
+  handleChangeValue,
+}) => {
   return (
     <input
+      disabled={disabled}
       className={styles.input}
       type="text"
       placeholder={placeholder}
